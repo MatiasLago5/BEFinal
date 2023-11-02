@@ -73,6 +73,15 @@ class CartDao {
       throw new Error("Error al vaciar el carrito");
     }
   }
+  async findByIdAndPopulate(cartId) {
+    try {
+      const cart = await Cart.findById(cartId).populate('products.product');
+      return cart;
+    } catch (error) {
+      console.error('Error al buscar el carrito:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new CartDao();

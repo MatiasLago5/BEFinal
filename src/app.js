@@ -21,8 +21,10 @@ const SESSION_SECRET = require("./config/config");
 const GITHUB_CLIENT_ID = require("./config/config");
 const GITHUB_CLIENT_SECRET = require("./config/config");
 const mockingModule = require("./mocking/mockingModule");
-const errorDictionary = require("./errors/errorDictionary");
 const errorHandler = require("./errors/errorHandler");
+const chatController = require("./controllers/chatController");
+const productController = require("./controllers/productController");
+const logger = require('./modules/logger');
 
 const app = express();
 const server = http.createServer(app);
@@ -68,6 +70,7 @@ const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const sessionsRoutes = require("./routes/sessionsRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
+const currentRoutes = require("./routes/current");
 
 app.use("/api/sessions", sessionsRoutes);
 
@@ -142,9 +145,16 @@ app.use("/", (req, res, next) => {
 
 app.use(productRoutes);
 app.use(cartRoutes);
+app.use(currentRoutes);
 app.use("/api/tickets", ticketRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/carts", cartRoutes);
+app.use("/current", currentRoutes);
+app.post("/api/chat/send", checkRole("user"), chatController.sendMessage);
+app.get("/api/chat/messages", checkRole("user"), chatController.getChatMessages);
+app.post("/api/products", checkRole("admin"), productController.createProduct);
+app.put("/api/products/:id", checkRole("admin"), productController.updateProduct);
+app.delete("/api/products/:id", checkRole("admin"), productController.deleteProduct);
 
 app.get("/", (req, res) => {
   if (req.session.user) {
@@ -153,46 +163,19 @@ app.get("/", (req, res) => {
   res.render("login");
 });
 
-app.get("/current", (req, res) => {
-  const user = req.session.user;
-  if (!user) {
-    return res.status(401).json({ message: "No has iniciado sesión." });
-  }
-  const userDTO = new UserDTO(user);
-  res.json(userDTO);
-});
-
-app.put("/products/:id", checkRole("admin"), (req, res) => {
-  res.json({ message: "Producto actualizado por el administrador." });
-});
-
-app.post("/chat", checkRole("user"), (req, res) => {
-  res.json({ message: "Mensaje enviado al chat." });
-});
-
-app.post("/cart/:userId/products/:productId", checkRole("user"), (req, res) => {
-  res.json({ message: "Producto agregado al carrito del usuario." });
-});
-
 app.get("/mockingproducts", (req, res) => {
   const mockProducts = mockingModule.generateMockProducts();
   res.json(mockProducts);
 });
 
-app.post("/crear-producto", (req, res, next) => {
-  try {
-    throw new Error(errorDictionary.CREATE_PRODUCT_FAILED);
-  } catch (error) {
-    next(error);
-  }
-});
+app.get('/loggerTester', (req, res) => {
+logger.debug('debug message');
+logger.info('info message');
+logger.warn('warning message');
+logger.error('error message');
+logger.fatal('fatal message');
 
-app.post("/agregar-al-carrito", (req, res, next) => {
-  try {
-    throw new Error(errorDictionary.ADD_TO_CART_FAILED);
-  } catch (error) {
-    next(error);
-  }
+res.send('Registro de prueba realizado.');
 });
 
 app.use((err, req, res, next) => {

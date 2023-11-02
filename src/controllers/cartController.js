@@ -1,11 +1,13 @@
 const Cart = require("../models/cart");
 const TicketService = require("../services/ticketService");
+const CartDao = require("../dao/cartDao");
+const cartDao = new CartDao();
 
 const CartController = {
   purchaseCart: async (req, res) => {
     const cartId = req.params.cid;
     try {
-      const cart = await Cart.findById(cartId).populate("products.product");
+      const cart = await cartDao.findByIdAndPopulate(cartId);
       const productsNotPurchased = [];
       const purchasedProducts = [];
       for (const cartProduct of cart.products) {
