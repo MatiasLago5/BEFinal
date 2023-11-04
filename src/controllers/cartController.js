@@ -1,6 +1,6 @@
 const Cart = require("../models/cart");
 const TicketService = require("../services/ticketService");
-const CartDao = require("../dao/cartDao");
+const {CartDao} = require("../dao/cartDao");
 const cartDao = new CartDao();
 
 const CartController = {
