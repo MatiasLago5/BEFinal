@@ -8,7 +8,6 @@ class ProductDao {
         limit,
         sort: { price: sort },
       };
-
       const products = await Product.find(
         { title: { $regex: query, $options: "i" } },
         null,

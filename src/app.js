@@ -25,6 +25,8 @@ const errorHandler = require("./errors/errorHandler");
 const chatController = require("./controllers/chatController");
 const productController = require("./controllers/productController");
 const logger = require('./modules/logger');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require("./swagger/swagger")
 
 const app = express();
 const server = http.createServer(app);
@@ -155,6 +157,7 @@ app.get("/api/chat/messages", checkRole("user"), chatController.getChatMessages)
 app.post("/api/products", checkRole("admin"), productController.createProduct);
 app.put("/api/products/:id", checkRole("admin"), productController.updateProduct);
 app.delete("/api/products/:id", checkRole("admin"), productController.deleteProduct);
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/", (req, res) => {
   if (req.session.user) {

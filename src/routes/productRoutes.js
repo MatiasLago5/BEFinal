@@ -4,7 +4,6 @@ const ProductDao = require("../dao/productDao");
 
 router.get("/products", async (req, res) => {
   const responseFormat = req.accepts(["html", "json"]);
-
   try {
     const DEFAULT_LIMIT = 10;
     const page = parseInt(req.query.page) || 1;

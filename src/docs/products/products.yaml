@@ -1,0 +1,72 @@
+openapi: 3.0.1
+
+info:
+  title: Products API
+  version: 1.0.0
+
+paths:
+  /products:
+    get:
+      summary: Obtener todos los productos
+      responses:
+        '200':
+          description: Lista de productos
+        '500':
+          description: Error interno
+
+    post:
+      summary: Crear nuevo producto
+      requestBody:
+        description: Datos del nuevo producto
+      responses:
+        '200':
+          description: Producto creado correctamente
+        '500':
+          description: Error al crear el producto
+
+  /products/{id}:
+    get:
+      summary: Obtener un producto por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Producto encontrado
+        '404':
+          description: Producto no encontrado
+        '500':
+          description: Error interno
+
+    put:
+      summary: Actualizar un producto por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Datos actualizados del producto
+      responses:
+        '200':
+          description: Producto actualizado correctamente
+        '500':
+          description: Error al actualizar el producto
+
+    delete:
+      summary: Eliminar un producto por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Producto eliminado correctamente
+        '500':
+          description: Error al eliminar el producto

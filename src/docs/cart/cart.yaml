@@ -1,0 +1,118 @@
+openapi: 3.0.1
+
+info:
+  title: Carts API
+  version: 1.0.0
+
+paths:
+  /carts:
+    post:
+      summary: Crear nuevo carrito
+      responses:
+        '201':
+          description: Carrito creado correctamente
+        '400':
+          description: Error al crear el carrito
+
+  /carts/{cid}:
+    get:
+      summary: Obtener detalles del carrito por ID
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Carrito encontrado
+        '404':
+          description: Carrito no encontrado
+        '500':
+          description: Error interno
+
+    post:
+      summary: Agregar producto al carrito
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Datos del producto a agregar
+      responses:
+        '201':
+          description: Producto agregado al carrito correctamente
+        '404':
+          description: Carrito o producto no encontrado
+        '400':
+          description: Error al agregar el producto al carrito
+
+    delete:
+      summary: Eliminar producto del carrito
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Producto eliminado del carrito correctamente
+        '500':
+          description: Error al eliminar el producto del carrito
+
+    put:
+      summary: Actualizar carrito
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Nuevos productos del carrito
+      responses:
+        '200':
+          description: Carrito actualizado correctamente
+        '400':
+          description: Error al actualizar el carrito
+
+    delete:
+      summary: Eliminar todos los productos del carrito
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Productos eliminados del carrito correctamente
+        '500':
+          description: Error al eliminar los productos del carrito
+
+    post:
+      summary: Comprar productos del carrito
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Compra realizada correctamente
+        '400':
+          description: Error al realizar la compra
